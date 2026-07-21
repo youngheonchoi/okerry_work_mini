@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { getServerSession } from '@/lib/session'
 import { signOut, deleteAccount } from '@/app/actions/auth'
 import { DeleteAccountButton } from '@/components/settings/DeleteAccountButton'
@@ -33,6 +34,10 @@ export default async function SettingsPage() {
       <div className="px-5 mt-6">
         <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400">서비스</p>
         <div className="overflow-hidden rounded-2xl border border-gray-100 bg-gray-50">
+          <Link href="/settings/work-history" className="flex w-full items-center justify-between px-4 py-3.5 border-b border-gray-100 text-left active:bg-gray-100 transition">
+            <span className="text-sm font-medium text-gray-800">근무 내역</span>
+            <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
+          </Link>
           <div className="flex w-full items-center justify-between px-4 py-3.5 text-left">
             <div>
               <p className="text-sm font-medium text-gray-800">홈 화면에 추가</p>
