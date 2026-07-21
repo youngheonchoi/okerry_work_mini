@@ -78,9 +78,7 @@ export default function JournalFlow({ today, initialDate, initialEntries }: Prop
   }
 
   return (
-    <div className="flex min-h-[calc(100vh-5rem)] flex-col bg-white px-5 pt-8 pb-10">
-      <h1 className="text-xl font-bold text-gray-900">일지 기록</h1>
-
+    <div className="flex min-h-[calc(100vh-5rem)] flex-col bg-white px-5 pb-28">
       {/* 날짜 이동 */}
       <div className="mt-5 flex items-center justify-between">
         <button
@@ -158,13 +156,15 @@ export default function JournalFlow({ today, initialDate, initialEntries }: Prop
 
       {error && <p className="mt-3 text-sm text-red-500">{error}</p>}
 
-      <button
-        onClick={handleSave}
-        disabled={saving || loading}
-        className="mt-auto pt-6 w-full rounded-xl bg-blue-500 py-4 text-base font-semibold text-white active:scale-95 transition disabled:opacity-50"
-      >
-        {saving ? '저장 중...' : saved ? '저장되었습니다' : '저장하기'}
-      </button>
+      <div className="fixed inset-x-0 bottom-20 z-40 px-5">
+        <button
+          onClick={handleSave}
+          disabled={saving || loading}
+          className="w-full rounded-xl bg-blue-500 py-4 text-base font-semibold text-white shadow-lg active:scale-95 transition disabled:opacity-50"
+        >
+          {saving ? '저장 중...' : saved ? '저장되었습니다' : '저장하기'}
+        </button>
+      </div>
     </div>
   )
 }

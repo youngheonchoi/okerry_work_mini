@@ -37,18 +37,21 @@ export default function DayDetailSheet({ dateStr, log, journal, dailyWage, onClo
       <div className="fixed inset-0 z-40 bg-black/30" onClick={onClose} />
 
       {/* 시트 */}
-      <div className="fixed bottom-0 left-0 right-0 z-50 rounded-t-2xl bg-white px-5 pb-10 pt-5 shadow-xl">
-        <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-gray-200" />
+      <div className="fixed bottom-0 left-0 right-0 z-50 flex max-h-[85vh] flex-col rounded-t-2xl bg-white pt-5 shadow-xl">
+        <div className="shrink-0 px-5">
+          <div className="mx-auto mb-4 h-1 w-10 rounded-full bg-gray-200" />
 
-        <div className="flex items-center justify-between mb-5">
-          <h3 className="text-base font-bold text-gray-900">{dateLabel}</h3>
-          <button onClick={onClose} className="text-gray-400">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+          <div className="flex items-center justify-between mb-5">
+            <h3 className="text-base font-bold text-gray-900">{dateLabel}</h3>
+            <button onClick={onClose} className="text-gray-400">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
         </div>
 
+        <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-10">
         {!log && (
           <p className="text-sm text-gray-400 text-center py-4">기록이 없는 날입니다</p>
         )}
@@ -120,6 +123,7 @@ export default function DayDetailSheet({ dateStr, log, journal, dailyWage, onClo
             </div>
           </div>
         )}
+        </div>
       </div>
     </>
   )
