@@ -1,33 +1,28 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import {
   format, startOfMonth, endOfMonth, eachDayOfInterval,
-  getDay, isSameMonth, isToday, parseISO, startOfWeek, addMonths, subMonths,
+  getDay, isToday, parseISO, addMonths, subMonths,
 } from 'date-fns'
 import { ko } from 'date-fns/locale'
-import type { WageSettings, WorkLog, DailyJournal } from '@/lib/db/schema'
+import type { WageSettings, WorkLog } from '@/lib/db/schema'
 import { getNextPayDate, getDaysUntilPay } from '@/lib/payPeriod'
-import { getWageBreakdown } from '@/lib/wage'
-import DayDetailSheet from './DayDetailSheet'
 
 type Props = {
   settings: WageSettings | null
   logs: WorkLog[]
-  journals: DailyJournal[]
   currentMonth: string
 }
 
-export default function CalendarView({ settings, logs, journals, currentMonth }: Props) {
+export default function CalendarView({ settings, logs, currentMonth }: Props) {
+  const router = useRouter()
   const [month, setMonth] = useState(parseISO(currentMonth + '-01'))
-  const [selectedLog, setSelectedLog] = useState<WorkLog | null>(null)
-  const [selectedJournal, setSelectedJournal] = useState<DailyJournal | null>(null)
-  const [selectedDate, setSelectedDate] = useState<string | null>(null)
 
   const days = eachDayOfInterval({ start: startOfMonth(month), end: endOfMonth(month) })
   const startPad = getDay(startOfMonth(month)) // 0=일
   const logMap = Object.fromEntries(logs.map((l) => [l.workDate, l]))
-  const journalMap = Object.fromEntries(journals.map((j) => [j.workDate, j]))
 
   const nextPayDate = settings
     ? getNextPayDate(settings.payType, parseISO(settings.nextPayDate))
@@ -39,9 +34,7 @@ export default function CalendarView({ settings, logs, journals, currentMonth }:
     .reduce((sum, l) => sum + l.totalWage, 0)
 
   function handleDayClick(dateStr: string) {
-    setSelectedDate(dateStr)
-    setSelectedLog(logMap[dateStr] ?? null)
-    setSelectedJournal(journalMap[dateStr] ?? null)
+    router.push(`/calendar/${dateStr}`)
   }
 
   function getDayDotColor(isHoliday: boolean, hasOvertime: boolean) {
@@ -135,17 +128,6 @@ export default function CalendarView({ settings, logs, journals, currentMonth }:
             </span>
           </div>
         </div>
-      )}
-
-      {/* 날짜 상세 바텀시트 */}
-      {selectedDate && (
-        <DayDetailSheet
-          dateStr={selectedDate}
-          log={selectedLog}
-          journal={selectedJournal}
-          dailyWage={settings?.dailyWage ?? 0}
-          onClose={() => { setSelectedDate(null); setSelectedLog(null); setSelectedJournal(null) }}
-        />
       )}
     </div>
   )
