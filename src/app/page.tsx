@@ -7,12 +7,12 @@ import { format } from 'date-fns'
 
 export default async function RootPage() {
   const session = await getServerSession()
-  if (!session?.user) redirect('/calendar')
+  if (!session?.user) redirect('/today')
 
   const today = format(new Date(), 'yyyy-MM-dd')
   const existing = await db.query.workLogs.findFirst({
     where: and(eq(workLogs.userId, session.user.id), eq(workLogs.workDate, today)),
   })
 
-  redirect(existing ? '/calendar' : '/today')
+  redirect(existing ? '/journal' : '/today')
 }

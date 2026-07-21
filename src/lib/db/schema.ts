@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, integer, date, boolean, numeric, timestamp, pgEnum, unique } from 'drizzle-orm/pg-core'
+import { pgTable, uuid, text, integer, date, boolean, numeric, timestamp, pgEnum, unique, jsonb } from 'drizzle-orm/pg-core'
 
 export const payTypeEnum = pgEnum('pay_type', ['daily', 'weekly', 'monthly'])
 
@@ -24,5 +24,21 @@ export const workLogs = pgTable('work_logs', {
   updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
 }, (t) => [unique().on(t.userId, t.workDate)])
 
+export type JournalEntry = {
+  startTime: string
+  endTime?: string
+  memo?: string
+}
+
+export const dailyJournals = pgTable('daily_journals', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  userId: text('user_id').notNull(),
+  workDate: date('work_date').notNull(),
+  entries: jsonb('entries').$type<JournalEntry[]>().notNull().default([]),
+  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+}, (t) => [unique().on(t.userId, t.workDate)])
+
 export type WageSettings = typeof wageSettings.$inferSelect
 export type WorkLog = typeof workLogs.$inferSelect
+export type DailyJournal = typeof dailyJournals.$inferSelect

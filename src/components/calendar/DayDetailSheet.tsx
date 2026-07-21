@@ -2,18 +2,19 @@
 
 import { format, parseISO } from 'date-fns'
 import { ko } from 'date-fns/locale'
-import type { WorkLog } from '@/lib/db/schema'
+import type { WorkLog, DailyJournal } from '@/lib/db/schema'
 import { getWageBreakdown } from '@/lib/wage'
 import { useEffect } from 'react'
 
 type Props = {
   dateStr: string
   log: WorkLog | null
+  journal: DailyJournal | null
   dailyWage: number
   onClose: () => void
 }
 
-export default function DayDetailSheet({ dateStr, log, dailyWage, onClose }: Props) {
+export default function DayDetailSheet({ dateStr, log, journal, dailyWage, onClose }: Props) {
   const date = parseISO(dateStr)
   const dateLabel = format(date, 'M월 d일 (eee)', { locale: ko })
 
@@ -98,6 +99,24 @@ export default function DayDetailSheet({ dateStr, log, dailyWage, onClose }: Pro
             <div className="flex justify-between rounded-xl bg-blue-50 px-4 py-3">
               <span className="text-sm font-semibold text-blue-700">합계</span>
               <span className="text-base font-bold text-blue-700">{log.totalWage.toLocaleString()}원</span>
+            </div>
+          </div>
+        )}
+
+        {journal && journal.entries.length > 0 && (
+          <div className="mt-5">
+            <div className="mb-2 flex items-center gap-1">
+              <p className="text-xs font-semibold uppercase tracking-wider text-gray-400">일지</p>
+            </div>
+            <div className="space-y-2 rounded-xl border border-gray-100 bg-gray-50 p-4">
+              {journal.entries.map((entry, i) => (
+                <div key={i} className="flex gap-3 text-sm">
+                  <span className="shrink-0 font-medium text-gray-500">
+                    {entry.startTime}{entry.endTime ? `–${entry.endTime}` : ''}
+                  </span>
+                  {entry.memo && <span className="text-gray-800">{entry.memo}</span>}
+                </div>
+              ))}
             </div>
           </div>
         )}
