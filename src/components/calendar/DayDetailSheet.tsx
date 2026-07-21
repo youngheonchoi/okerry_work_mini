@@ -4,7 +4,6 @@ import { format, parseISO } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import type { WorkLog } from '@/lib/db/schema'
 import { getWageBreakdown } from '@/lib/wage'
-import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 
 type Props = {
@@ -15,7 +14,6 @@ type Props = {
 }
 
 export default function DayDetailSheet({ dateStr, log, dailyWage, onClose }: Props) {
-  const router = useRouter()
   const date = parseISO(dateStr)
   const dateLabel = format(date, 'M월 d일 (eee)', { locale: ko })
 
@@ -103,13 +101,6 @@ export default function DayDetailSheet({ dateStr, log, dailyWage, onClose }: Pro
             </div>
           </div>
         )}
-
-        <button
-          onClick={() => { onClose(); router.push('/today') }}
-          className="mt-5 w-full rounded-xl border border-gray-200 py-3.5 text-sm font-semibold text-gray-600 active:bg-gray-50 transition"
-        >
-          수정하기
-        </button>
       </div>
     </>
   )
