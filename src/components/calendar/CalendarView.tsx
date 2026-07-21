@@ -41,6 +41,13 @@ export default function CalendarView({ settings, logs, currentMonth }: Props) {
     setSelectedLog(log ?? null)
   }
 
+  function getDayDotColor(isHoliday: boolean, hasOvertime: boolean) {
+    if (isHoliday && hasOvertime) return 'bg-rose-500'
+    if (isHoliday) return 'bg-amber-400'
+    if (hasOvertime) return 'bg-violet-500'
+    return 'bg-emerald-500'
+  }
+
   return (
     <div className="flex flex-col bg-white">
       {/* 월 이동 헤더 */}
@@ -86,14 +93,24 @@ export default function CalendarView({ settings, logs, currentMonth }: Props) {
               </span>
               {isPayDay && <span className="text-xs">💰</span>}
               {log?.worked && (
-                <span className={`text-[10px] font-semibold leading-tight ${log.isHoliday ? 'text-orange-500' : 'text-blue-600'}`}>
-                  {(log.totalWage / 10000).toFixed(1)}만
-                  {Number(log.overtimeHrs) > 0 && <span className="text-yellow-500"> ★</span>}
+                <span className="flex items-center gap-1">
+                  <span className={`h-1.5 w-1.5 rounded-full ${getDayDotColor(log.isHoliday, Number(log.overtimeHrs) > 0)}`} />
+                  <span className="text-[10px] font-semibold leading-tight text-gray-700">
+                    {(log.totalWage / 10000).toFixed(1)}만
+                  </span>
                 </span>
               )}
             </button>
           )
         })}
+      </div>
+
+      {/* 범례 */}
+      <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 px-4 py-3 text-[11px] text-gray-500">
+        <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />평일</span>
+        <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-violet-500" />야근</span>
+        <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-amber-400" />주말·휴일</span>
+        <span className="flex items-center gap-1"><span className="h-1.5 w-1.5 rounded-full bg-rose-500" />주말·휴일 야근</span>
       </div>
 
       {/* 급여 요약 */}

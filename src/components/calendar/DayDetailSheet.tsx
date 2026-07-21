@@ -29,6 +29,9 @@ export default function DayDetailSheet({ dateStr, log, dailyWage, onClose }: Pro
     ? getWageBreakdown(dailyWage, true, log.isHoliday, Number(log.overtimeHrs))
     : null
 
+  const hourlyRate = Math.round(dailyWage / 8)
+  const overtimeMultiplier = log?.isHoliday ? 2.0 : 1.5
+
   return (
     <>
       {/* 오버레이 */}
@@ -72,14 +75,26 @@ export default function DayDetailSheet({ dateStr, log, dailyWage, onClose }: Pro
               </div>
             )}
             <div className="my-3 border-t border-gray-100" />
-            <div className="flex justify-between text-sm">
-              <span className="text-gray-500">기본 {log.isHoliday ? '휴일 수당' : '일당'}</span>
-              <span className="font-medium text-gray-900">{breakdown.base.toLocaleString()}원</span>
+            <div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-500">기본 {log.isHoliday ? '휴일 수당' : '일당'}</span>
+                <span className="font-medium text-gray-900">{breakdown.base.toLocaleString()}원</span>
+              </div>
+              {log.isHoliday && (
+                <p className="mt-0.5 text-right text-xs text-gray-400">
+                  시급 {hourlyRate.toLocaleString()}원 × 1.5배 × 8시간
+                </p>
+              )}
             </div>
             {breakdown.overtime > 0 && (
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-500">야근 수당</span>
-                <span className="font-medium text-orange-500">+{breakdown.overtime.toLocaleString()}원</span>
+              <div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-500">야근 수당</span>
+                  <span className="font-medium text-orange-500">+{breakdown.overtime.toLocaleString()}원</span>
+                </div>
+                <p className="mt-0.5 text-right text-xs text-gray-400">
+                  시급 {hourlyRate.toLocaleString()}원 × {overtimeMultiplier}배 × {log.overtimeHrs}시간
+                </p>
               </div>
             )}
             <div className="flex justify-between rounded-xl bg-blue-50 px-4 py-3">

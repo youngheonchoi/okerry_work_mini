@@ -5,13 +5,13 @@ import './globals.css'
 const geist = Geist({ variable: '--font-geist', subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'okerry',
-  description: '일용직 일당 기록 서비스',
+  title: 'okerry work mini',
+  description: 'okerry work mini',
   manifest: '/manifest.json',
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'okerry',
+    title: 'okerry work mini',
   },
 }
 

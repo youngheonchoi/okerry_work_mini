@@ -26,7 +26,7 @@ export default function OnboardingFlow() {
         payType,
         nextPayDate,
       })
-      router.push('/calendar')
+      router.push('/today')
     } catch {
       setLoading(false)
     }
@@ -36,7 +36,7 @@ export default function OnboardingFlow() {
     <div className="flex flex-1 flex-col px-6 pt-14">
       {/* 헤더 */}
       <div className="mb-10 text-center">
-        <h1 className="text-2xl font-bold text-gray-900">okerry</h1>
+        <h1 className="text-2xl font-bold text-gray-900">okerry work mini</h1>
         <p className="mt-1 text-sm text-gray-500">기본 정보를 입력해 주세요</p>
       </div>
 
@@ -59,18 +59,23 @@ export default function OnboardingFlow() {
           <p className="mt-1 text-sm text-gray-500">하루 8시간 기준 금액을 입력해 주세요</p>
           <div className="mt-8 relative">
             <input
-              type="number"
+              type="text"
               inputMode="numeric"
               placeholder="0"
               value={dailyWage}
-              onChange={(e) => setDailyWage(e.target.value)}
-              className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-4 text-right text-2xl font-bold text-gray-900 outline-none focus:border-blue-500 focus:bg-white"
+              onChange={(e) => {
+                const digitsOnly = e.target.value.replace(/[^0-9]/g, '')
+                const formatted = digitsOnly ? Number(digitsOnly).toLocaleString() : ''
+                if (formatted.length > 12) return
+                setDailyWage(formatted)
+              }}
+              className="w-full rounded-xl border border-gray-200 bg-gray-50 py-4 pl-4 pr-12 text-right text-2xl font-bold text-gray-900 outline-none focus:border-blue-500 focus:bg-white"
             />
             <span className="absolute right-4 top-1/2 -translate-y-1/2 text-lg text-gray-400">원</span>
           </div>
           <button
             onClick={() => setStep(2)}
-            disabled={!dailyWage || Number(dailyWage) <= 0}
+            disabled={!dailyWage || Number(dailyWage.replace(/,/g, '')) <= 0}
             className="mt-auto mb-8 w-full rounded-xl bg-blue-500 py-4 text-base font-semibold text-white disabled:opacity-40 active:scale-95 transition"
           >
             다음

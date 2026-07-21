@@ -2,7 +2,10 @@
 
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
+import { eq } from 'drizzle-orm'
 import { getServerSession } from '@/lib/session'
+import { db } from '@/lib/db'
+import { wageSettings, workLogs } from '@/lib/db/schema'
 
 export async function signOut() {
   const cookieStore = await cookies()
@@ -19,6 +22,11 @@ export async function signOut() {
 export async function deleteAccount() {
   const session = await getServerSession()
   if (!session?.user?.id) redirect('/sign-in')
+
+  const userId = session.user.id
+
+  await db.delete(workLogs).where(eq(workLogs.userId, userId))
+  await db.delete(wageSettings).where(eq(wageSettings.userId, userId))
 
   const baseUrl = process.env.NEON_AUTH_BASE_URL!
   const cookieStore = await cookies()

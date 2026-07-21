@@ -1,5 +1,6 @@
 import { getServerSession } from '@/lib/session'
 import { signOut, deleteAccount } from '@/app/actions/auth'
+import { DeleteAccountButton } from '@/components/settings/DeleteAccountButton'
 
 export default async function SettingsPage() {
   const session = await getServerSession()
@@ -24,12 +25,7 @@ export default async function SettingsPage() {
               <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
             </button>
           </form>
-          <form action={deleteAccount}>
-            <button type="submit" className="flex w-full items-center justify-between px-4 py-3.5 text-left active:bg-red-50 transition">
-              <span className="text-sm font-medium text-red-500">회원 탈퇴</span>
-              <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" /></svg>
-            </button>
-          </form>
+          <DeleteAccountButton action={deleteAccount} />
         </div>
       </div>
 
@@ -48,7 +44,7 @@ export default async function SettingsPage() {
       </div>
 
       <div className="mt-auto px-5 pb-6 text-center">
-        <p className="text-xs text-gray-300">okerry v1.0</p>
+        <p className="text-xs text-gray-300">okerry work mini v1.0</p>
       </div>
     </div>
   )

@@ -1,5 +1,18 @@
 import { redirect } from 'next/navigation'
+import { getServerSession } from '@/lib/session'
+import { db } from '@/lib/db'
+import { workLogs } from '@/lib/db/schema'
+import { eq, and } from 'drizzle-orm'
+import { format } from 'date-fns'
 
-export default function RootPage() {
-  redirect('/calendar')
+export default async function RootPage() {
+  const session = await getServerSession()
+  if (!session?.user) redirect('/calendar')
+
+  const today = format(new Date(), 'yyyy-MM-dd')
+  const existing = await db.query.workLogs.findFirst({
+    where: and(eq(workLogs.userId, session.user.id), eq(workLogs.workDate, today)),
+  })
+
+  redirect(existing ? '/calendar' : '/today')
 }
