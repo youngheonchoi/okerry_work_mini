@@ -51,7 +51,10 @@ export default function DayDetailSheet({ dateStr, log, journal, dailyWage, onClo
           </div>
         </div>
 
-        <div className="min-h-0 flex-1 overflow-y-auto px-5 pb-10">
+        <div
+          className="min-h-0 flex-1 overflow-y-auto overscroll-contain touch-pan-y px-5 pb-10"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
         {!log && (
           <p className="text-sm text-gray-400 text-center py-4">기록이 없는 날입니다</p>
         )}
