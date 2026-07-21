@@ -156,7 +156,7 @@ export default function JournalFlow({ today, initialDate, initialEntries }: Prop
 
       {error && <p className="mt-3 text-sm text-red-500">{error}</p>}
 
-      <div className="fixed inset-x-0 bottom-20 z-40 px-5">
+      <div className="fixed inset-x-0 bottom-[100px] z-40 px-5">
         <button
           onClick={handleSave}
           disabled={saving || loading}
