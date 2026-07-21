@@ -7,6 +7,32 @@ import { getServerSession } from '@/lib/session'
 import { db } from '@/lib/db'
 import { wageSettings, workLogs } from '@/lib/db/schema'
 
+const GUEST_USER_ID = '5a8b5f72-df91-4136-8ed6-2caeffca31bf'
+
+export async function guestSignIn(formData: FormData) {
+  const code = formData.get('code')
+  const expected = process.env.GUEST_INVITE_CODE
+
+  if (!expected || code !== expected) {
+    redirect('/sign-in?error=invalid_code')
+  }
+
+  const header = Buffer.from(JSON.stringify({ alg: 'none', typ: 'JWT' })).toString('base64url')
+  const payload = Buffer.from(
+    JSON.stringify({ id: GUEST_USER_ID, name: '친구', email: 'guest@okerry.local' })
+  ).toString('base64url')
+
+  const cookieStore = await cookies()
+  cookieStore.set('neon-auth-jwt', `${header}.${payload}.`, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'lax',
+    path: '/',
+    maxAge: 60 * 60 * 24 * 365,
+  })
+  redirect('/calendar')
+}
+
 export async function signOut() {
   const cookieStore = await cookies()
   cookieStore.set('neon-auth-jwt', '', {
